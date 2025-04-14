@@ -35,32 +35,22 @@ const fetch = require('node-fetch');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Разрешаем CORS
-app.use(cors());
-app.use(express.json());
+const express = require('express');
+const cors = require('cors');
+const app = express();
 
-app.post('/', async (req, res) => {
-  try {
-    const data = req.body;
+app.use(cors()); // Разрешаем все домены для CORS
+app.use(express.json()); // Для работы с JSON
 
-    const response = await fetch('https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbwGo7Hrx80jLm8QUxW5SR7_Q1_FclqNLhQyDIsnPSTKuUbfuptj4ZDGewS060RrEVn8/exec', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+app.post('/', (req, res) => {
+  console.log(req.body); // Проверка данных, отправленных с Rambox
 
-    const result = await response.json();
-    res.json(result);
-  } catch (error) {
-    console.error('Error forwarding to Google Sheets:', error);
-    res.status(500).json({ status: 'error', message: error.message });
-  }
+  // Пример: просто логируем данные
+  res.status(200).json({ message: "Data received" });
 });
 
-app.get('/', (req, res) => {
-  res.send('Rambox → Google Sheets middleware is working!');
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
